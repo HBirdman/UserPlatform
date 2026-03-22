@@ -1,13 +1,14 @@
 package aston.homework.service;
 
-import aston.homework.dto.UserCreateDTO;
-import aston.homework.dto.UserDTO;
+import aston.homework.dto.UserRequestDTO;
+import aston.homework.dto.UserResponseDTO;
+
+import java.util.List;
 
 public interface UserService {
-    void create(UserCreateDTO userDTO);
-    void showAll();
-    void show(Long id);
-    UserDTO get(Long id);
-    boolean update(UserDTO dto);
-    boolean delete(Long id);
+    UserResponseDTO create(UserRequestDTO userDTO);
+    List<UserResponseDTO> showAll();
+    UserResponseDTO show(Long id);
+    UserResponseDTO update(Long id, UserRequestDTO dto);
+    void delete(Long id);
 }

@@ -1,22 +1,33 @@
 package aston.homework.mapper;
 
-import aston.homework.dto.UserCreateDTO;
-import aston.homework.dto.UserDTO;
+import aston.homework.dto.UserRequestDTO;
+import aston.homework.dto.UserResponseDTO;
 import aston.homework.model.User;
+import org.springframework.stereotype.Component;
 
+import java.time.LocalDateTime;
+
+@Component
 public class UserMapper {
 
-    public User map(UserCreateDTO dto) {
-        return new User(dto.getName(), dto.getEmail(), dto.getAge(), dto.getCreatedAt());
+    public User map(UserRequestDTO dto) {
+        if (dto == null) return null;
+        return User.builder()
+                .name(dto.getName())
+                .email(dto.getEmail())
+                .age(dto.getAge())
+                .createdAt(LocalDateTime.now())
+                .build();
     }
 
-    public UserDTO map(User user) {
-        return new UserDTO(user.getId(), user.getName(), user.getEmail(), user.getAge(), user.getCreatedAt());
-    }
-
-    public User map(UserDTO dto) {
-        User user = new User(dto.getName(), dto.getEmail(), dto.getAge(), dto.getCreatedAt());
-        user.setId(dto.getId());
-        return user;
+    public UserResponseDTO map(User user) {
+        if (user == null) return null;
+        return UserResponseDTO.builder()
+                .id(user.getId())
+                .name(user.getName())
+                .email(user.getEmail())
+                .age(user.getAge())
+                .createdAt(user.getCreatedAt())
+                .build();
     }
 }

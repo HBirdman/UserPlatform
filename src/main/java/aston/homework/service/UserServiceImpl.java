@@ -1,60 +1,74 @@
 package aston.homework.service;
 
-import aston.homework.dao.UserDAO;
-import aston.homework.dto.UserCreateDTO;
-import aston.homework.dto.UserDTO;
+import aston.homework.dto.UserRequestDTO;
+import aston.homework.dto.UserResponseDTO;
+import aston.homework.exception.UserNotFoundException;
 import aston.homework.mapper.UserMapper;
 import aston.homework.model.User;
+import aston.homework.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
+@Slf4j
+@Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class UserServiceImpl implements UserService {
-    private final UserDAO userDAO;
+
+    private final UserRepository userRepository;
     private final UserMapper mapper;
 
-    public void create(UserCreateDTO userDTO) {
-        User user = mapper.map(userDTO);
-        userDAO.createUser(user);
-    }
-
-    public void showAll() {
-        List<User> users = userDAO.getAllUsers();
-
-        if (users != null && !users.isEmpty()) {
-            for (User user : users) {
-                System.out.println(user);
-            }
-        } else {
-            System.out.println("Пользователи не найдены.");
-        }
-    }
-
-    public void show(Long id) {
-        User user = userDAO.getUserById(id);
-        if (user != null) {
-            System.out.println("Найден пользователь: " + user);
-        } else {
-            System.out.println("Пользователь с этим ID не найден: " + id);
-        }
-    }
-
-    public UserDTO get(Long id) {
-        User user = userDAO.getUserById(id);
-        if (user != null) {
-            return mapper.map(user);
-        }
-        System.out.println("Пользователь с этим ID не найден: " + id);
-        return null;
-    }
-
-    public boolean update(UserDTO dto) {
+    @Override
+    @Transactional
+    public UserResponseDTO create(UserRequestDTO dto) {
         User user = mapper.map(dto);
-        return userDAO.updateUser(user);
+        User savedUser = userRepository.save(user);
+        log.info("Пользователь сохранен: {}", savedUser.getEmail());
+        return mapper.map(savedUser);
     }
 
-    public boolean delete(Long id) {
-        return userDAO.deleteUserById(id);
+    @Override
+    public List<UserResponseDTO> showAll() {
+        return userRepository.findAll().stream()
+                .map(mapper::map)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public UserResponseDTO show(Long id) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new UserNotFoundException(id));
+        return mapper.map(user);
+    }
+
+    @Override
+    @Transactional
+    public UserResponseDTO update(Long id, UserRequestDTO dto) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new UserNotFoundException(id));
+
+        user.setName(dto.getName());
+        user.setEmail(dto.getEmail());
+        user.setAge(dto.getAge());
+
+        User updatedUser = userRepository.save(user);
+        log.info("Пользователь с ID {} обновлен", id);
+
+        return mapper.map(updatedUser);
+    }
+
+    @Override
+    @Transactional
+    public void delete(Long id) {
+        if (!userRepository.existsById(id)) {
+            throw new UserNotFoundException(id);
+        }
+        userRepository.deleteById(id);
+        log.info("Пользователь с ID {} удален", id);
     }
 }
