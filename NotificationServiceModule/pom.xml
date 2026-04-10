@@ -4,16 +4,14 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <groupId>org.springframework.boot</groupId>
-        <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.2.5</version>
-        <relativePath/>
+        <groupId>aston.homework</groupId>
+        <artifactId>UserPlatform</artifactId>
+        <version>1.0.0</version>
+        <relativePath>../pom.xml</relativePath>
     </parent>
 
-    <groupId>aston.homework</groupId>
     <artifactId>notification-service</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
-    <name>notification-service</name>
+    <name>NotificationServiceModule</name>
 
     <properties>
         <java.version>17</java.version>
