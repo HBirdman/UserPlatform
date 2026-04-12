@@ -13,6 +13,9 @@
     <modules>
         <module>UserServiceModule</module>
         <module>NotificationServiceModule</module>
+        <module>ApiGateway</module>
+        <module>ServiceRegistry</module>
+        <module>ConfigServer</module>
     </modules>
 
     <parent>
