@@ -1,0 +1,46 @@
+server:
+  port: 8082
+
+spring:
+  config:
+    import: configserver:http://config-server:8888
+    cloud:
+      config:
+        uri: http://config-server:8888
+        fail-fast: true
+    application:
+      name: notification-service
+  mail:
+    host: mailhog
+    port: 1025
+    username:
+    password:
+    properties:
+      mail:
+        smtp:
+          auth: false
+          starttls:
+            enable: false
+  kafka:
+    bootstrap-servers: kafka:9092
+    consumer:
+      group-id: notification-service
+      auto-offset-reset: earliest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+      properties:
+        spring.json.trusted.packages: "*"
+        spring.json.value.default.type: aston.homework.notification.event.UserEvent
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://service-registry:8761/eureka/
+  instance:
+    prefer-ip-address: true
+    hostname: notification-service
+
+app:
+  kafka:
+    topic:
+      user-events: user-events
