@@ -14,7 +14,7 @@ spring:
     gateway:
       routes:
         - id: user-service-route
-          uri: lb://USER-SERVICE
+          uri: lb://user-service
           predicates:
             - Path=/api/users/**
           filters:
@@ -23,7 +23,7 @@ spring:
                 name: userServiceBreaker
                 fallbackUri: forward:/fallback/user
         - id: notification-service-route
-          uri: lb://NOTIFICATION-SERVICE
+          uri: lb://notification-service
           predicates:
             - Path=/api/notifications/**
 

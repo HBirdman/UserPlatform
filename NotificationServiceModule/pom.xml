@@ -92,7 +92,7 @@
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <version>3.2.5</version>
                 <configuration>
-                    <mainClass>aston.homework.NotificationServiceApplication</mainClass>
+                    <mainClass>aston.homework.notification.NotificationServiceApplication</mainClass>
                     <layout>JAR</layout>
                 </configuration>
                 <executions>
